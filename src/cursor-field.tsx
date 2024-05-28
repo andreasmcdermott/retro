@@ -9,11 +9,11 @@
 // is only there to support slower initial load from local storage.
 
 import { Reflect } from "@rocicorp/reflect/client";
-import { useEffect } from "react";
-import styles from "./cursor-field.module.css";
-import { M } from "./mutators.js";
-import { useClientState } from "./subscriptions.js";
 import { usePresence } from "@rocicorp/reflect/react";
+import { useEffect } from "react";
+import { M } from "./mutators";
+import { useClientState } from "./subscriptions";
+import styles from "./cursor-field.module.css";
 
 export default function CursorField({ r }: { r: Reflect<M> }) {
   useEffect(() => {

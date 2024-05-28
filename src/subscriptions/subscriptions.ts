@@ -11,8 +11,8 @@
 
 import type { Reflect } from "@rocicorp/reflect/client";
 import { useSubscribe } from "@rocicorp/reflect/react";
-import { getClientState } from "./client-state.js";
-import type { M } from "./mutators.js";
+import { getClientState } from "../state/client-state";
+import type { M } from "../mutators/";
 
 export function useCount(reflect: Reflect<M>, key: string) {
   return useSubscribe(reflect, (tx) => tx.get<number>(key), 0);
