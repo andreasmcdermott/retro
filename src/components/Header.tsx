@@ -5,7 +5,7 @@ import styles from "./header.module.css";
 import { TextInput } from "./TextInput";
 import { useReflect, useUserId } from "../AppState";
 import { useEditState } from "../hooks/useEditState";
-import { Edit, PlusOne, Viewing } from "../icons";
+import { Edit, New, PlusOne, Viewing } from "../icons";
 
 export function Header() {
   const clients = useClients();
@@ -63,6 +63,16 @@ export function Header() {
           </IconButton>
         )}
         <CopyButton value={location.href} color="var(--yellow)" />
+        <div className={styles.otherActions}>
+          <IconButton
+            onClick={() => {
+              window.open(location.origin, "_blank");
+            }}
+            color="var(--yellow)"
+          >
+            <New />
+          </IconButton>
+        </div>
       </div>
       <div className={styles.users}>
         {clients.map((client) => (
