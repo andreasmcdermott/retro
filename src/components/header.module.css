@@ -22,9 +22,11 @@
 }
 
 .users {
+  border-left: 1px solid var(--pink);
   display: flex;
   gap: 0rem;
   align-items: center;
+  padding-left: 1rem;
 }
 
 .users > * {
@@ -32,7 +34,7 @@
 }
 
 .otherActions {
-  margin-left: 0;
-  padding-left: 1rem;
-  border-left: 1px solid var(--pink);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }

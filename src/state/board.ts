@@ -11,7 +11,7 @@ export type BoardState = {
 
 export async function initBoardState(tx: WriteTransaction, userId: string) {
   return tx.set("boardState", {
-    boardInfo: { name: "New Board", owner: userId, mode: "editing" },
+    boardInfo: { name: "Unnamed Board", owner: userId, mode: "editing" },
   });
 }
 

@@ -1,11 +1,11 @@
 import { useBoardInfo, useClients } from "../subscriptions";
 import { Avatar } from "./Avatar";
-import { CopyButton, IconButton, UnstyledButton } from "./Button";
+import { Button, CopyButton, IconButton, UnstyledButton } from "./Button";
 import styles from "./header.module.css";
 import { TextInput } from "./TextInput";
 import { useReflect, useUserId } from "../AppState";
 import { useEditState } from "../hooks/useEditState";
-import { Edit, New, PlusOne, Viewing } from "../icons";
+import { Edit, Menu, New, PlusOne, User, Viewing } from "../icons";
 
 export function Header() {
   const clients = useClients();
@@ -63,21 +63,23 @@ export function Header() {
           </IconButton>
         )}
         <CopyButton value={location.href} color="var(--yellow)" />
-        <div className={styles.otherActions}>
-          <IconButton
-            onClick={() => {
-              window.open(location.origin, "_blank");
-            }}
-            color="var(--yellow)"
-          >
-            <New />
-          </IconButton>
+        <div className={styles.users}>
+          {clients.map((client) => (
+            <Avatar key={client.id} client={client} />
+          ))}
         </div>
       </div>
-      <div className={styles.users}>
-        {clients.map((client) => (
-          <Avatar key={client.id} client={client} />
-        ))}
+      <div className={styles.otherActions}>
+        <Button
+          onClick={() => {
+            window.open(location.origin, "_blank");
+          }}
+        >
+          <New /> Create New Board
+        </Button>
+        <Button onClick={() => {}}>
+          <User />
+        </Button>
       </div>
     </div>
   );
