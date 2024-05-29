@@ -6,3 +6,17 @@
   gap: 2rem;
   overflow: hidden;
 }
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  justify-content: center;
+  align-items: center;
+  color: var(--cyan);
+  font-size: 1.5rem;
+  text-shadow: 0 0 0.5rem var(--cyan);
+  font-weight: bold;
+  height: 100%;
+  width: 100%;
+}

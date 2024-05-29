@@ -62,3 +62,17 @@ export function CopyButton({
     </IconButton>
   );
 }
+
+export function Button({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button type="button" onClick={onClick} className={styles.button}>
+      {children}
+    </button>
+  );
+}

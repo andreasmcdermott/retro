@@ -10,9 +10,6 @@ export type BoardState = {
 };
 
 export async function initBoardState(tx: WriteTransaction, userId: string) {
-  const existingBoardInfo = await getBoardInfo(tx);
-  if (existingBoardInfo?.owner) return;
-
   return tx.set("boardState", {
     boardInfo: { name: "New Board", owner: userId, mode: "editing" },
   });

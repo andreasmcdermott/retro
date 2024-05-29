@@ -5,7 +5,10 @@ import { Reflect } from "@rocicorp/reflect/client";
 import { mutators } from "./mutators";
 import { useAsyncEffect } from "./hooks/useAsyncEffect";
 
-const Context = createContext<ReturnType<typeof createState> | null>(null);
+const Context = createContext<Omit<
+  ReturnType<typeof createState>,
+  "isNewBoard"
+> | null>(null);
 
 const createState = () => {
   const server: string | undefined = import.meta.env.VITE_REFLECT_URL;
@@ -27,7 +30,7 @@ const createState = () => {
     mutators,
   });
 
-  return { r, userId, boardId };
+  return { r, userId, boardId, isNewBoard: !pathname };
 };
 
 export function AppState({ children }: { children: React.ReactNode }) {
@@ -40,11 +43,11 @@ export function AppState({ children }: { children: React.ReactNode }) {
   >(null);
 
   useAsyncEffect(async () => {
-    const { r, userId, boardId } = createState();
+    const { r, userId, boardId, isNewBoard } = createState();
     (window as any).r = r; // Only for HMR
 
     await r.mutate.initClientState({ userId, userInfo: getUserInfo() });
-    await r.mutate.initBoardState(userId);
+    if (isNewBoard) await r.mutate.initBoardState(userId);
 
     setR(r);
     setUserId(userId);
