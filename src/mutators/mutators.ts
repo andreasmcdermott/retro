@@ -1,20 +1,26 @@
 import type { MutatorDefs } from "@rocicorp/reflect";
 import { initClientState } from "../state/client.js";
-import { setBoardInfo } from "../state/board.js";
+import {
+  initBoardState,
+  updateBoardName,
+  cycleBoardMode,
+} from "../state/board.js";
 import {
   putRetroItem,
-  updateRetroItem,
   deleteRetroItem,
   voteOnRetroItem,
+  updateRetroValue,
 } from "../state/retro-item.js";
 
 export type M = typeof mutators;
 
 export const mutators = {
   initClientState,
-  setBoardInfo,
+  initBoardState,
+  updateBoardName,
+  cycleBoardMode,
   putRetroItem,
-  updateRetroItem,
+  updateRetroValue,
   deleteRetroItem,
   voteOnRetroItem,
 } satisfies MutatorDefs;

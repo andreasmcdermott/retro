@@ -1,5 +1,9 @@
 import { nanoid } from "nanoid";
-import { useCurrentClient, useRetroItemsByColumn } from "../subscriptions";
+import {
+  useBoardInfo,
+  useCurrentClient,
+  useRetroItemsByColumn,
+} from "../subscriptions";
 import { RetroItem } from "./RetroItem";
 import { TextArea } from "./TextArea";
 import styles from "./column.module.css";
@@ -20,6 +24,13 @@ export function Column({
   const [nextId, setNextId] = useState(nanoid());
   const items = useRetroItemsByColumn(id);
   const userId = useUserId();
+  const boardInfo = useBoardInfo();
+  const isEditing = boardInfo.mode === "editing";
+  const isViewing = boardInfo.mode === "viewing";
+
+  if (isViewing) {
+    items.sort((a, b) => b.upvotes?.length - a.upvotes?.length);
+  }
 
   return (
     <div className={styles.column}>
@@ -28,23 +39,25 @@ export function Column({
         <h3 className={styles.columnSubtitle}>{subTitle}</h3>
       </div>
       <div className={styles.columnList}>
-        <TextArea
-          key={nextId}
-          disabled={saving}
-          onChange={async (value) => {
-            setSaving(true);
-            await r.mutate.putRetroItem({
-              id: nextId,
-              column: id,
-              value,
-              author: userId,
-              upvotes: [],
-            });
-            setSaving(false);
-            setNextId(nanoid());
-          }}
-          onEscape={() => setNextId(nanoid())}
-        />
+        {isEditing && (
+          <TextArea
+            key={nextId}
+            disabled={saving}
+            onChange={async (value) => {
+              setSaving(true);
+              await r.mutate.putRetroItem({
+                id: nextId,
+                column: id,
+                value,
+                author: userId,
+                upvotes: [],
+              });
+              setSaving(false);
+              setNextId(nanoid());
+            }}
+            onEscape={() => setNextId(nanoid())}
+          />
+        )}
 
         {items.map((item) => (
           <RetroItem key={item.id} item={item} />

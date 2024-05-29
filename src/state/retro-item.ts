@@ -24,6 +24,15 @@ export {
   listRetroItems,
 };
 
+export async function updateRetroValue(
+  tx: WriteTransaction,
+  { id, value }: { id: string; value: string }
+) {
+  const item = await getRetroItem(tx, id);
+  if (!item) return;
+  return updateRetroItem(tx, { ...item, value });
+}
+
 export async function listRetroItemsByColumn(
   tx: ReadTransaction,
   column: string

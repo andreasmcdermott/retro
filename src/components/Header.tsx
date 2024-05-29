@@ -1,61 +1,26 @@
-import { useReducer } from "react";
 import { useBoardInfo, useClients } from "../subscriptions";
 import { Avatar } from "./Avatar";
-import { CopyButton, UnstyledButton } from "./Button";
+import { CopyButton, IconButton, UnstyledButton } from "./Button";
 import styles from "./header.module.css";
 import { TextInput } from "./TextInput";
-import { useReflect } from "../AppState";
-
-const useEditBoardName = () => {
-  const r = useReflect();
-  const [state, dispatch] = useReducer(
-    (
-      state: {
-        isEditing: boolean;
-        value: string;
-      },
-      {
-        type,
-        value = "",
-      }: {
-        type: "start-editing" | "stop-editing" | "change-name";
-        value?: string;
-      }
-    ) => {
-      switch (type) {
-        case "start-editing":
-          return { ...state, isEditing: true, value };
-        case "stop-editing":
-          return { ...state, isEditing: false };
-        case "change-name":
-          r.mutate.setBoardInfo({ name: value });
-          return { ...state, isEditing: false };
-        default:
-          return state;
-      }
-    },
-    { isEditing: false, value: "" }
-  );
-
-  return {
-    state,
-    startEditing: (currName: string) =>
-      dispatch({ type: "start-editing", value: currName }),
-    stopEditing: () => dispatch({ type: "stop-editing" }),
-    changeName: (newName: string) =>
-      dispatch({ type: "change-name", value: newName }),
-  };
-};
+import { useReflect, useUserId } from "../AppState";
+import { useEditState } from "../hooks/useEditState";
+import { Edit, PlusOne, Viewing } from "../icons";
 
 export function Header() {
+  const clients = useClients();
+  const boardInfo = useBoardInfo();
+  const userId = useUserId();
+  const r = useReflect();
+  const isOwner = userId === boardInfo.owner;
   const {
     state: { isEditing, value },
     startEditing,
     stopEditing,
-    changeName,
-  } = useEditBoardName();
-  const otherClients = useClients();
-  const boardInfo = useBoardInfo();
+    changeValue,
+  } = useEditState(isOwner, (v) =>
+    r.mutate.updateBoardName({ userId, name: v })
+  );
 
   return (
     <div className={styles.header}>
@@ -64,21 +29,41 @@ export function Header() {
           <TextInput
             autoFocus
             value={value}
-            onChange={changeName}
+            onChange={changeValue}
             onBlur={stopEditing}
             onEscape={stopEditing}
           />
         ) : (
           <h1 className={styles.boardTitle}>
-            <UnstyledButton onClick={() => startEditing(boardInfo.name)}>
-              {boardInfo.name}
-            </UnstyledButton>
+            {isOwner ? (
+              <UnstyledButton onClick={() => startEditing(boardInfo.name)}>
+                {boardInfo.name}
+              </UnstyledButton>
+            ) : (
+              boardInfo.name
+            )}
           </h1>
+        )}
+        {isOwner && (
+          <IconButton
+            onClick={() => {
+              r.mutate.cycleBoardMode(userId);
+            }}
+            color="var(--cyan)"
+          >
+            {boardInfo.mode === "viewing" ? (
+              <Viewing />
+            ) : boardInfo.mode === "voting" ? (
+              <PlusOne />
+            ) : (
+              <Edit />
+            )}
+          </IconButton>
         )}
         <CopyButton value={location.href} color="var(--cyan)" />
       </div>
       <div className={styles.users}>
-        {otherClients.map((client) => (
+        {clients.map((client) => (
           <Avatar key={client.id} client={client} />
         ))}
       </div>

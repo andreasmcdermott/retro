@@ -16,15 +16,27 @@ export function useClients() {
   return useSubscribe(
     r,
     async (tx) => {
-      const all = await Promise.allSettled(
+      const clients = await Promise.allSettled(
         clientIds.map((id) => getClientState(tx, id))
       );
 
-      return all
+      const all = clients
         .map((maybeClient) =>
           maybeClient.status === "fulfilled" ? maybeClient.value : null
         )
         .filter((maybeClient): maybeClient is ClientState => !!maybeClient);
+
+      const uniqueUserIds = new Set();
+      const finalList = [];
+
+      for (const client of all) {
+        if (!uniqueUserIds.has(client.userId)) {
+          uniqueUserIds.add(client.userId);
+          finalList.push(client);
+        }
+      }
+
+      return finalList;
     },
     [],
     [clientIds]
@@ -33,7 +45,11 @@ export function useClients() {
 
 export function useBoardInfo() {
   const r = useReflect();
-  return useSubscribe(r, (tx) => getBoardInfo(tx), { name: "Unnamed Board" });
+  return useSubscribe(r, (tx) => getBoardInfo(tx), {
+    name: "Unnamed Board",
+    owner: null,
+    mode: "viewing",
+  });
 }
 
 export function useRetroItemsByColumn(column: string) {

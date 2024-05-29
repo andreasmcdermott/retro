@@ -44,6 +44,7 @@ export function AppState({ children }: { children: React.ReactNode }) {
     (window as any).r = r; // Only for HMR
 
     await r.mutate.initClientState({ userId, userInfo: getUserInfo() });
+    await r.mutate.initBoardState(userId);
 
     setR(r);
     setUserId(userId);
