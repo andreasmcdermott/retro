@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 
 import { App } from "./App";
 import { StrictMode } from "react";
-import { r } from "./state/appState";
+import { r } from "./state/r";
 
 const rootElement = document.getElementById("root");
 if (rootElement === null) throw new Error("root element is null");

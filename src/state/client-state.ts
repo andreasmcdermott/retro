@@ -1,24 +1,9 @@
-// This file defines the ClientState entity that we use to track
-// cursors. It also defines some basic CRUD functions using the
-// @rocicorp/rails helper library.
-
 import type { WriteTransaction } from "@rocicorp/reflect";
 import { Entity, generate } from "@rocicorp/rails";
-
-export type ClientState = Entity & {
-  cursor: { x: number; y: number } | null;
-  userInfo: UserInfo;
-};
+import { oneOf } from "../utils/rand";
 
 export type UserInfo = { name: string; avatar: string; color: string };
-
-export {
-  initClientState,
-  getClientState,
-  putClientState,
-  updateClientState,
-  randUserInfo,
-};
+export type ClientState = Entity & { userInfo: UserInfo };
 
 const {
   init: initImpl,
@@ -27,34 +12,45 @@ const {
   update: updateClientState,
 } = generate<ClientState>("client-state");
 
-function initClientState(tx: WriteTransaction, userInfo: UserInfo) {
-  return initImpl(tx, {
-    id: tx.clientID,
-    cursor: null,
-    userInfo,
-  });
+export { getClientState, putClientState, updateClientState };
+
+export function initClientState(tx: WriteTransaction, userInfo: UserInfo) {
+  return initImpl(tx, { id: tx.clientID, userInfo });
 }
 
-function randUserInfo(): UserInfo {
-  const [avatar, name] = avatars[randInt(0, avatars.length - 1)];
-  return {
-    avatar,
-    name,
-    color: colors[randInt(0, colors.length - 1)],
-  };
-}
-
-const colors = ["#f94144", "#f3722c", "#f8961e", "#f9844a", "#f9c74f"];
+const colors = [
+  "#2de2e6",
+  "#ff4365",
+  "#791e94",
+  "#541388",
+  "#f6019d",
+  "#f9c80e",
+];
 const avatars = [
   ["🐶", "Puppy"],
   ["🐱", "Kitty"],
   ["🐭", "Mouse"],
   ["🐹", "Hamster"],
   ["🐰", "Bunny"],
+  ["🦊", "Fox"],
+  ["🐻", "Bear"],
+  ["🐼", "Panda"],
+  ["🐨", "Koala"],
+  ["🐷", "Pig"],
+  ["🐵", "Monkey"],
+  ["🦁", "Lion"],
+  ["🐯", "Tiger"],
+  ["🐮", "Cow"],
+  ["🐸", "Frog"],
+  ["🐥", "Chicken"],
 ];
 
-function randInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+export function getUserInfo(): UserInfo {
+  const rawUserInfo = localStorage.getItem("userInfo");
+  if (rawUserInfo) return JSON.parse(rawUserInfo);
+
+  const [avatar, name] = oneOf(avatars);
+  const randUserInfo = { avatar, name, color: oneOf(colors) };
+  localStorage.setItem("userInfo", JSON.stringify(randUserInfo));
+  return randUserInfo;
 }

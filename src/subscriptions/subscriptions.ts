@@ -9,15 +9,30 @@
 // subscription "query" is re-run whenever any of the data it depends on
 // changes. The subscription "fires" when the result of the query changes.
 
-import type { Reflect } from "@rocicorp/reflect/client";
-import { useSubscribe } from "@rocicorp/reflect/react";
-import { getClientState } from "../state/client-state";
-import type { M } from "../mutators/";
+import { usePresence, useSubscribe } from "@rocicorp/reflect/react";
+import { ClientState, getClientState } from "../state/client-state";
+import { r } from "../state/r";
 
-export function useCount(reflect: Reflect<M>, key: string) {
-  return useSubscribe(reflect, (tx) => tx.get<number>(key), 0);
+export function useCurrentClient() {
+  return useSubscribe(r, (tx) => getClientState(tx, r.clientID), null);
 }
 
-export function useClientState(r: Reflect<M>, id: string) {
-  return useSubscribe(r, (tx) => getClientState(tx, id), null);
+export function useClients() {
+  const clientIds = usePresence(r);
+
+  return useSubscribe(
+    r,
+    async (tx) => {
+      const all: ClientState[] = [];
+
+      for (const id of clientIds) {
+        const client = await getClientState(tx, id);
+        if (client) all.push(client);
+      }
+
+      return all;
+    },
+    [],
+    [clientIds]
+  );
 }

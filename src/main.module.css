@@ -1,0 +1,6 @@
+.main {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(300px, 25%));
+  gap: 2rem;
+}

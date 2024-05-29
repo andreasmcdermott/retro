@@ -1,32 +1,23 @@
-import { useEffect } from "react";
-import { randUserInfo } from "./state/client-state";
-import { useCount } from "./subscriptions";
-import { r } from "./state/appState";
-
-import styles from "./index.module.css";
-
-const incrementKey = "count";
+import { getUserInfo } from "./state/client-state";
+import { r } from "./state/r";
+import styles from "./app.module.css";
+import { useAsyncEffect } from "./hooks/useAsyncEffect";
+import { Header } from "./Header";
+import { Main } from "./Main";
 
 export function App() {
-  useEffect(() => {
-    void (async () => {
-      const userInfo = randUserInfo();
-      await r.mutate.initClientState(userInfo);
-    })();
+  useAsyncEffect(async () => {
+    await r.mutate.initClientState(getUserInfo());
   }, []);
-
-  const handleButtonClick = () => {
-    void r.mutate.increment({ key: incrementKey, delta: 1 });
-  };
-
-  const count = useCount(r, incrementKey);
 
   return (
     <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.count}>{count}</div>
-        <button onClick={handleButtonClick}>Bonk</button>
+      <div className={styles.header}>
+        <Header />
       </div>
+      <main className={styles.main}>
+        <Main />
+      </main>
     </div>
   );
 }
