@@ -12,7 +12,7 @@ export function Header() {
   const boardInfo = useBoardInfo();
   const userId = useUserId();
   const r = useReflect();
-  const isOwner = userId === boardInfo.owner;
+  const isOwner = !!boardInfo && userId === boardInfo.owner;
   const {
     state: { isEditing, value },
     startEditing,
@@ -21,6 +21,8 @@ export function Header() {
   } = useEditState(isOwner, (v) =>
     r.mutate.updateBoardName({ userId, name: v })
   );
+
+  if (!boardInfo) return null;
 
   return (
     <div className={styles.header}>

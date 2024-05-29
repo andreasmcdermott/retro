@@ -1,7 +1,12 @@
+import { useBoardInfo } from "../subscriptions";
 import { Column } from "./Column";
 import styles from "./main.module.css";
 
 export function Main() {
+  const boardInfo = useBoardInfo();
+
+  if (!boardInfo) return null;
+
   return (
     <div className={styles.main}>
       <Column id="wins" title="Wins" subTitle="What went well?" />

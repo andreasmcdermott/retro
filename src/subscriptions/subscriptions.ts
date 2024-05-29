@@ -45,11 +45,7 @@ export function useClients() {
 
 export function useBoardInfo() {
   const r = useReflect();
-  return useSubscribe(r, (tx) => getBoardInfo(tx), {
-    name: "Unnamed Board",
-    owner: null,
-    mode: "viewing",
-  });
+  return useSubscribe(r, (tx) => getBoardInfo(tx), null);
 }
 
 export function useRetroItemsByColumn(column: string) {
