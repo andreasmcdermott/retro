@@ -14,7 +14,7 @@ export async function initBoardState(tx: WriteTransaction, userId: string) {
   if (existingBoardInfo?.owner) return;
 
   return tx.set("boardState", {
-    boardInfo: { name: "Unnamed Board", owner: userId, mode: "editing" },
+    boardInfo: { name: "New Board", owner: userId, mode: "editing" },
   });
 }
 
