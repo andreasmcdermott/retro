@@ -45,7 +45,7 @@ export function RetroItem({ item }: { item: RetroItemState }) {
                   userId,
                 });
               }}
-              color="var(--black)"
+              color="var(--dark-blue)"
             >
               {(item.upvotes || []).includes(userId) ? (
                 <MinusOne />
@@ -59,13 +59,13 @@ export function RetroItem({ item }: { item: RetroItemState }) {
           <div className={styles.actions}>
             <IconButton
               onClick={() => startEditing(item.value)}
-              color="var(--black)"
+              color="var(--dark-blue)"
             >
               <Edit />
             </IconButton>
             <IconButton
               onClick={() => r.mutate.deleteRetroItem(item.id)}
-              color="var(--black)"
+              color="var(--dark-blue)"
             >
               <Trash />
             </IconButton>

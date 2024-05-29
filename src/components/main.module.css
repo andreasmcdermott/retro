@@ -2,5 +2,7 @@
   height: 100%;
   display: grid;
   grid-template-columns: repeat(4, minmax(300px, 25%));
+  grid-template-rows: 100%;
   gap: 2rem;
+  overflow: hidden;
 }

@@ -40,28 +40,32 @@ export function Column({
       </div>
       <div className={styles.columnList}>
         {isEditing && (
-          <TextArea
-            key={nextId}
-            disabled={saving}
-            onChange={async (value) => {
-              setSaving(true);
-              await r.mutate.putRetroItem({
-                id: nextId,
-                column: id,
-                value,
-                author: userId,
-                upvotes: [],
-              });
-              setSaving(false);
-              setNextId(nanoid());
-            }}
-            onEscape={() => setNextId(nanoid())}
-          />
+          <div className={styles.editorContainer}>
+            <TextArea
+              key={nextId}
+              disabled={saving}
+              onChange={async (value) => {
+                setSaving(true);
+                await r.mutate.putRetroItem({
+                  id: nextId,
+                  column: id,
+                  value,
+                  author: userId,
+                  upvotes: [],
+                });
+                setSaving(false);
+                setNextId(nanoid());
+              }}
+              onEscape={() => setNextId(nanoid())}
+            />
+          </div>
         )}
 
-        {items.map((item) => (
-          <RetroItem key={item.id} item={item} />
-        ))}
+        <div className={styles.scrollContainer}>
+          {items.map((item) => (
+            <RetroItem key={item.id} item={item} />
+          ))}
+        </div>
       </div>
     </div>
   );

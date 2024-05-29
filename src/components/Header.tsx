@@ -49,7 +49,7 @@ export function Header() {
             onClick={() => {
               r.mutate.cycleBoardMode(userId);
             }}
-            color="var(--cyan)"
+            color="var(--yellow)"
           >
             {boardInfo.mode === "viewing" ? (
               <Viewing />
@@ -60,7 +60,7 @@ export function Header() {
             )}
           </IconButton>
         )}
-        <CopyButton value={location.href} color="var(--cyan)" />
+        <CopyButton value={location.href} color="var(--yellow)" />
       </div>
       <div className={styles.users}>
         {clients.map((client) => (
