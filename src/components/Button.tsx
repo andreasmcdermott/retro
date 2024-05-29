@@ -76,3 +76,17 @@ export function Button({
     </button>
   );
 }
+
+export function SmallButton({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button type="button" onClick={onClick} className={styles.smallButton}>
+      {children}
+    </button>
+  );
+}

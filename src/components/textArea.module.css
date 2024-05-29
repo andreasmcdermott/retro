@@ -1,7 +1,7 @@
 .textarea {
   width: 100%;
   outline: none;
-  border: none;
+  border: 0 transparent none;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem 1rem 0.25rem 1rem;
   background-color: rgba(0, 0, 0, 0.25);
@@ -13,4 +13,16 @@
   resize: vertical;
   max-height: calc(12lh + 0.5rem);
   min-height: calc(3lh + 0.5rem);
+}
+
+.container {
+  position: relative;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 0.25rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }

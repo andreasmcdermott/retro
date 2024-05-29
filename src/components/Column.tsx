@@ -1,9 +1,5 @@
 import { nanoid } from "nanoid";
-import {
-  useBoardInfo,
-  useCurrentClient,
-  useRetroItemsByColumn,
-} from "../subscriptions";
+import { useBoardInfo, useRetroItemsByColumn } from "../subscriptions";
 import { RetroItem } from "./RetroItem";
 import { TextArea } from "./TextArea";
 import styles from "./column.module.css";
@@ -31,9 +27,22 @@ export function Column({
   const isEditing = boardInfo.mode === "editing";
   const isViewing = boardInfo.mode === "viewing";
 
-  if (isViewing) {
-    items.sort((a, b) => b.upvotes?.length - a.upvotes?.length);
-  }
+  if (isViewing) items.sort((a, b) => b.upvotes?.length - a.upvotes?.length);
+
+  const onSave = async (value: string) => {
+    if (!value.trim()) return;
+
+    setSaving(true);
+    await r.mutate.putRetroItem({
+      id: nextId,
+      column: id,
+      value,
+      author: userId,
+      upvotes: [],
+    });
+    setSaving(false);
+    setNextId(nanoid());
+  };
 
   return (
     <div className={styles.column}>
@@ -47,19 +56,8 @@ export function Column({
             <TextArea
               key={nextId}
               disabled={saving}
-              onChange={async (value) => {
-                setSaving(true);
-                await r.mutate.putRetroItem({
-                  id: nextId,
-                  column: id,
-                  value,
-                  author: userId,
-                  upvotes: [],
-                });
-                setSaving(false);
-                setNextId(nanoid());
-              }}
-              onEscape={() => setNextId(nanoid())}
+              onSave={onSave}
+              onCancel={() => setNextId(nanoid())}
             />
           </div>
         )}

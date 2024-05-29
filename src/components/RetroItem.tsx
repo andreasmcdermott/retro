@@ -28,7 +28,7 @@ export function RetroItem({ item }: { item: RetroItemState }) {
 
   if (isEditing)
     return (
-      <TextArea value={value} onChange={changeValue} onEscape={stopEditing} />
+      <TextArea value={value} onSave={changeValue} onCancel={stopEditing} />
     );
 
   return (
