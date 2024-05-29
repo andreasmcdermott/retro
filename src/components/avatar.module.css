@@ -1,8 +1,7 @@
 .avatar {
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
-  border: 2px solid #fff;
+  border-radius: 0.2rem 0.75rem 0.2rem 0.75rem;
   display: flex;
   justify-content: center;
   align-items: center;

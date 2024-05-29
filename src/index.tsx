@@ -2,7 +2,6 @@ import ReactDOM from "react-dom/client";
 
 import { App } from "./App";
 import { StrictMode } from "react";
-import { r } from "./state/r";
 
 const rootElement = document.getElementById("root");
 if (rootElement === null) throw new Error("root element is null");
@@ -16,7 +15,7 @@ root.render(
 
 if (import.meta.hot) {
   import.meta.hot.dispose(async () => {
-    await r.close();
+    await (window as any).r.close();
     root.unmount();
   });
 }

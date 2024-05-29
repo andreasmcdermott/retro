@@ -2,8 +2,15 @@ import type { WriteTransaction } from "@rocicorp/reflect";
 import { Entity, generate } from "@rocicorp/rails";
 import { oneOf } from "../utils/rand";
 
-export type UserInfo = { name: string; avatar: string; color: string };
-export type ClientState = Entity & { userInfo: UserInfo };
+export type UserInfo = {
+  name: string;
+  avatar: string;
+  color: string;
+};
+export type ClientState = Entity & {
+  userId: string;
+  userInfo: UserInfo;
+};
 
 const {
   init: initImpl,
@@ -14,18 +21,14 @@ const {
 
 export { getClientState, putClientState, updateClientState };
 
-export function initClientState(tx: WriteTransaction, userInfo: UserInfo) {
-  return initImpl(tx, { id: tx.clientID, userInfo });
+export function initClientState(
+  tx: WriteTransaction,
+  clientState: { userId: string; userInfo: UserInfo }
+) {
+  return initImpl(tx, { id: tx.clientID, ...clientState });
 }
 
-const colors = [
-  "#2de2e6",
-  "#ff4365",
-  "#791e94",
-  "#541388",
-  "#f6019d",
-  "#f9c80e",
-];
+const colors = ["#2de2e6", "#ff4365", "#541388", "#f6019d", "#f9c80e"];
 const avatars = [
   ["🐶", "Puppy"],
   ["🐱", "Kitty"],
