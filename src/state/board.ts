@@ -11,7 +11,7 @@ export type BoardState = {
 
 export async function initBoardState(tx: WriteTransaction, userId: string) {
   const existingBoardInfo = await getBoardInfo(tx);
-  if (existingBoardInfo.owner) return;
+  if (existingBoardInfo?.owner) return;
 
   return tx.set("boardState", {
     boardInfo: { name: "Unnamed Board", owner: userId, mode: "editing" },
@@ -19,13 +19,7 @@ export async function initBoardState(tx: WriteTransaction, userId: string) {
 }
 
 export async function getBoardInfo(tx: ReadTransaction) {
-  return (
-    (await tx.get<BoardState>("boardState"))?.boardInfo ?? {
-      name: "Unnamed Board",
-      owner: null,
-      mode: "viewing",
-    }
-  );
+  return (await tx.get<BoardState>("boardState"))?.boardInfo ?? null;
 }
 
 export async function updateBoardName(
@@ -33,13 +27,13 @@ export async function updateBoardName(
   { userId, name }: { userId: string; name: string }
 ) {
   const boardInfo = await getBoardInfo(tx);
-  if (boardInfo.owner === userId)
+  if (boardInfo && boardInfo.owner === userId)
     return tx.set("boardState", { boardInfo: { ...boardInfo, name } });
 }
 
 export async function cycleBoardMode(tx: WriteTransaction, userId: string) {
   const boardInfo = await getBoardInfo(tx);
-  if (boardInfo.owner === userId) {
+  if (boardInfo && boardInfo.owner === userId) {
     return tx.set("boardState", {
       boardInfo: {
         ...boardInfo,
