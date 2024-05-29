@@ -25,6 +25,9 @@ export function Column({
   const items = useRetroItemsByColumn(id);
   const userId = useUserId();
   const boardInfo = useBoardInfo();
+
+  if (!boardInfo) return null;
+
   const isEditing = boardInfo.mode === "editing";
   const isViewing = boardInfo.mode === "viewing";
 

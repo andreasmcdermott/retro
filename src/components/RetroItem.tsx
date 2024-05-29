@@ -20,6 +20,9 @@ export function RetroItem({ item }: { item: RetroItemState }) {
     r.mutate.updateRetroValue({ id: item.id, value: v })
   );
   const boardInfo = useBoardInfo();
+
+  if (!boardInfo) return null;
+
   const canEdit = boardInfo.mode === "editing";
   const canVote = boardInfo.mode !== "viewing";
 
