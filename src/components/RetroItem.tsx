@@ -4,6 +4,7 @@ import { Edit, MinusOne, PlusOne, Trash } from "../icons";
 import { RetroItemState } from "../state/retro-item";
 import { useBoardInfo } from "../subscriptions";
 import { IconButton } from "./Button";
+import { DraftItem } from "./DraftItem";
 import { TextArea } from "./TextArea";
 import styles from "./retroItem.module.css";
 
@@ -33,23 +34,7 @@ export function RetroItem({ item }: { item: RetroItemState }) {
     );
 
   if (isDraft) {
-    return (
-      <div
-        className={styles.draft}
-        style={
-          !!item.updatedAt
-            ? {
-                opacity:
-                  1 -
-                  Math.max(
-                    0,
-                    Math.min(1, (Date.now() - item.updatedAt) / 1000 / 30)
-                  ),
-              }
-            : { opacity: 0.5 }
-        }
-      />
-    );
+    return <DraftItem updatedAt={item.updatedAt} />;
   }
 
   return (

@@ -30,7 +30,7 @@ export function Column({
   if (isViewing) items.sort((a, b) => b.upvotes?.length - a.upvotes?.length);
 
   const onEdit = async (value: string) => {
-    if (!value) onCancel();
+    if (!value) r.mutate.deleteRetroItem(nextId);
     else
       await r.mutate.putRetroItem({
         id: nextId,
