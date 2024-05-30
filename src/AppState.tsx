@@ -73,12 +73,15 @@ export function AppState({ children }: { children: React.ReactNode }) {
     setBoardId(newState.boardId);
   }, []);
 
+  const state = useMemo(
+    () => (r && userId && boardId ? { r, userId, boardId } : null),
+    [r, userId, boardId]
+  );
+
   if (!r || !userId || !boardId) return null;
 
   return (
-    <Context.Provider
-      value={useMemo(() => ({ r, userId, boardId }), [r, userId, boardId])}
-    >
+    <Context.Provider value={state}>
       <>{children}</>
     </Context.Provider>
   );
