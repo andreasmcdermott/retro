@@ -1,11 +1,14 @@
 import { Entity, generate } from "@rocicorp/rails";
 import { ReadTransaction, WriteTransaction } from "@rocicorp/reflect";
+import { seconds } from "../utils/time";
 
 export type RetroItemState = Entity & {
   column: string;
   value: string;
   author: string;
   upvotes: string[];
+  draft?: boolean;
+  updatedAt?: number;
 };
 
 const {
@@ -35,11 +38,18 @@ export async function updateRetroValue(
 
 export async function listRetroItemsByColumn(
   tx: ReadTransaction,
-  column: string
+  column: string,
+  userId: string
 ) {
   const all = await listRetroItems(tx);
   return all.filter(
-    (item): item is RetroItemState => !!item && item.column === column
+    (item): item is RetroItemState =>
+      !!item &&
+      item.column === column &&
+      (item.author !== userId || !item.draft) && // Only show drafts to other users
+      (!item.draft ||
+        !item.updatedAt ||
+        Date.now() - item.updatedAt < seconds(30)) // Don't include drafts too old
   );
 }
 

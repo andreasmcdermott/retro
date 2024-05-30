@@ -62,10 +62,11 @@ export function useBoardInfo() {
 
 export function useRetroItemsByColumn(column: string) {
   const r = useReflect();
+  const userId = useUserId();
 
   return useSubscribe(
     r,
-    (tx) => listRetroItemsByColumn(tx, column),
+    (tx) => listRetroItemsByColumn(tx, column, userId),
     [],
     [column]
   );

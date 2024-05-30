@@ -3,7 +3,7 @@ import { useBoardInfo, useRetroItemsByColumn } from "../subscriptions";
 import { RetroItem } from "./RetroItem";
 import { TextArea } from "./TextArea";
 import styles from "./column.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useReflect, useUserId } from "../AppState";
 
 export function Column({
@@ -29,6 +29,25 @@ export function Column({
 
   if (isViewing) items.sort((a, b) => b.upvotes?.length - a.upvotes?.length);
 
+  const onEdit = async (value: string) => {
+    if (!value) onCancel();
+    else
+      await r.mutate.putRetroItem({
+        id: nextId,
+        column: id,
+        value,
+        author: userId,
+        upvotes: [],
+        draft: true,
+        updatedAt: Date.now(),
+      });
+  };
+
+  const onCancel = async () => {
+    await r.mutate.deleteRetroItem(nextId);
+    setNextId(nanoid());
+  };
+
   const onSave = async (value: string) => {
     if (!value.trim()) return;
 
@@ -39,6 +58,8 @@ export function Column({
       value,
       author: userId,
       upvotes: [],
+      draft: false,
+      updatedAt: Date.now(),
     });
     setSaving(false);
     setNextId(nanoid());
@@ -56,8 +77,9 @@ export function Column({
             <TextArea
               key={nextId}
               disabled={saving}
+              onInputChange={onEdit}
               onSave={onSave}
-              onCancel={() => setNextId(nanoid())}
+              onCancel={onCancel}
             />
           </div>
         )}

@@ -6,11 +6,13 @@ import styles from "./textArea.module.css";
 export function TextArea({
   value = "",
   disabled,
+  onInputChange,
   onSave,
   onCancel,
 }: {
   value?: string;
   disabled?: boolean;
+  onInputChange?: (value: string) => void;
   onSave: (v: string) => void;
   onCancel: () => void;
 }) {
@@ -19,7 +21,10 @@ export function TextArea({
   return (
     <div className={styles.container}>
       <textarea
-        onInput={(e) => setCurrContent(e.currentTarget.value)}
+        onInput={(e) => {
+          setCurrContent(e.currentTarget.value);
+          onInputChange?.(e.currentTarget.value);
+        }}
         className={styles.textarea}
         defaultValue={value}
         disabled={disabled}
