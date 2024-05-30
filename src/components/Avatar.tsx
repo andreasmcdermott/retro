@@ -1,11 +1,13 @@
-import { ClientState } from "../state/client";
-import { useBoardInfo } from "../subscriptions";
+import { useBoardInfo, useUser } from "../subscriptions";
 import { Popover } from "./Popover";
 import styles from "./avatar.module.css";
 
-export function Avatar({ client }: { client: ClientState }) {
-  const popoverId = `popover-${client.userId}`;
+export function Avatar({ userId }: { userId: string }) {
+  const user = useUser(userId);
+  const popoverId = `popover-${userId}`;
   const boardInfo = useBoardInfo();
+
+  if (!user) return null;
 
   return (
     <>
@@ -14,8 +16,8 @@ export function Avatar({ client }: { client: ClientState }) {
         type="button"
         className={styles.avatar}
         style={{
-          backgroundColor: client.userInfo.color,
-          boxShadow: `0 0 1rem ${client.userInfo.color}`,
+          backgroundColor: user.color,
+          boxShadow: `0 0 1rem ${user.color}`,
         }}
         ref={(node) => {
           if (node) {
@@ -24,12 +26,10 @@ export function Avatar({ client }: { client: ClientState }) {
           }
         }}
       >
-        {client.userInfo.avatar}
+        {user.avatar}
       </button>
       <Popover id={popoverId} align="center">
-        {`${client.userInfo.name}${
-          boardInfo?.owner === client.userId ? " (owner)" : ""
-        }`}
+        {`${user.name}${boardInfo?.owner === user.id ? " (owner)" : ""}`}
       </Popover>
     </>
   );

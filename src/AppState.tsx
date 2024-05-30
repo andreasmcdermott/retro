@@ -1,21 +1,24 @@
 import { createContext, useContext, useMemo, useState } from "react";
-import { getUserInfo } from "./state/client";
 import { nanoid } from "nanoid";
 import { Reflect } from "@rocicorp/reflect/client";
 import { mutators } from "./mutators";
 import { useAsyncEffect } from "./hooks/useAsyncEffect";
+import { getNewUserInfo } from "./state/user";
+
+const version = 2;
 
 const Context = createContext<Omit<
   ReturnType<typeof createState>,
-  "isNewBoard"
+  "isNewBoard" | "isNewUser"
 > | null>(null);
 
 const createState = () => {
   const server: string | undefined = import.meta.env.VITE_REFLECT_URL;
   if (!server) throw new Error("VITE_REFLECT_URL required");
 
-  const userId = localStorage.getItem("userId") ?? nanoid();
-  localStorage.setItem("userId", userId);
+  const existingUserId = localStorage.getItem(`v${version}:userId`);
+  const userId = existingUserId ?? nanoid();
+  localStorage.setItem(`v${version}:userId`, userId);
 
   const pathname = location.pathname.slice(1);
   const boardId = pathname || nanoid();
@@ -30,7 +33,13 @@ const createState = () => {
     mutators,
   });
 
-  return { r, userId, boardId, isNewBoard: !pathname };
+  return {
+    r,
+    userId,
+    boardId,
+    isNewBoard: !pathname,
+    isNewUser: !existingUserId,
+  };
 };
 
 export function AppState({ children }: { children: React.ReactNode }) {
@@ -43,11 +52,13 @@ export function AppState({ children }: { children: React.ReactNode }) {
   >(null);
 
   useAsyncEffect(async () => {
-    const { r, userId, boardId, isNewBoard } = createState();
+    const { r, userId, boardId, isNewBoard, isNewUser } = createState();
     (window as any).r = r; // Only for HMR
 
-    await r.mutate.initClientState({ userId, userInfo: getUserInfo() });
+    await r.mutate.initClientState(userId);
     if (isNewBoard) await r.mutate.initBoardState(userId);
+    if (isNewUser)
+      await r.mutate.initUserState({ id: userId, ...getNewUserInfo() });
 
     setR(r);
     setUserId(userId);

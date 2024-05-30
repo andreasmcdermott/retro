@@ -1,25 +1,25 @@
 import { Reflect } from "@rocicorp/reflect/client";
 import { useReflect } from "../AppState";
-import {
-  UserInfo,
-  avatars,
-  colors,
-  getStoredUserInfo,
-  updateStoredUserInfo,
-} from "../state/client";
 import { ColorButton, UnstyledButton } from "./Button";
 import styles from "./userMenu.module.css";
 import { M } from "../mutators";
 import { TextInput } from "./TextInput";
+import { UserInfo, avatars, colors } from "../state/user";
+import { useCurrentUser } from "../subscriptions";
 
-const updateUserInfo = (r: Reflect<M>, change: Partial<UserInfo>) => {
-  const newState = { ...getStoredUserInfo(), ...change };
-  updateStoredUserInfo(newState);
-  r.mutate.setUserInfo(newState);
+const updateUserInfo = (
+  r: Reflect<M>,
+  userId: string,
+  change: Partial<UserInfo>
+) => {
+  r.mutate.updateUserState({ id: userId, ...change });
 };
 
 export function UserMenu() {
   const r = useReflect();
+  const user = useCurrentUser();
+
+  if (!user) return null;
 
   return (
     <>
@@ -27,8 +27,8 @@ export function UserMenu() {
         <legend>Name</legend>
         <div style={{ gridColumn: "1 / -1" }}>
           <TextInput
-            value={getStoredUserInfo().name}
-            onChange={(v) => updateUserInfo(r, { name: v })}
+            value={user.name}
+            onChange={(v) => updateUserInfo(r, user.id, { name: v })}
           />
         </div>
       </fieldset>
@@ -38,7 +38,7 @@ export function UserMenu() {
           <UnstyledButton
             key={name}
             onClick={() => {
-              updateUserInfo(r, { avatar: emoji });
+              updateUserInfo(r, user.id, { avatar: emoji });
             }}
           >
             {emoji}
@@ -52,7 +52,7 @@ export function UserMenu() {
             key={color}
             color={color}
             onClick={() => {
-              updateUserInfo(r, { color });
+              updateUserInfo(r, user.id, { color });
             }}
           />
         ))}

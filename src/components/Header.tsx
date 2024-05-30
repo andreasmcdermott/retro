@@ -1,4 +1,4 @@
-import { useBoardInfo, useClients } from "../subscriptions";
+import { useBoardInfo, useUsers } from "../subscriptions";
 import { Avatar } from "./Avatar";
 import { Button, CopyButton, IconButton, UnstyledButton } from "./Button";
 import styles from "./header.module.css";
@@ -10,7 +10,7 @@ import { Popover } from "./Popover";
 import { UserMenu } from "./UserMenu";
 
 export function Header() {
-  const clients = useClients();
+  const users = useUsers();
   const boardInfo = useBoardInfo();
   const userId = useUserId();
   const r = useReflect();
@@ -66,8 +66,8 @@ export function Header() {
         )}
         <CopyButton value={location.href} color="var(--yellow)" />
         <div className={styles.users}>
-          {clients.map((client) => (
-            <Avatar key={client.id} client={client} />
+          {users.map((user) => (
+            <Avatar key={user.id} userId={user.id} />
           ))}
         </div>
       </div>
