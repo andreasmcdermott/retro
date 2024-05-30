@@ -74,5 +74,5 @@ export async function setUserInfo(tx: WriteTransaction, userInfo: UserInfo) {
 
   if (!current) return;
 
-  return updateClientState(tx, { ...current, userInfo });
+  return putClientState(tx, { ...current, userInfo });
 }
