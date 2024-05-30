@@ -4,11 +4,6 @@ import { Reflect } from "@rocicorp/reflect/client";
 import { mutators } from "./mutators";
 import { useAsyncEffect } from "./hooks/useAsyncEffect";
 import { getNewUserInfo, hasUserState } from "./state/user";
-import { hasBoardState } from "./state/board";
-
-const version = 2;
-
-const Context = createContext<ReturnType<typeof createState> | null>(null);
 
 const createState = () => {
   const server: string | undefined = import.meta.env.VITE_REFLECT_URL;
@@ -31,10 +26,14 @@ const createState = () => {
     mutators,
   });
 
-  return { r, userId, boardId };
+  return { r, userId, boardId, newBoard: !pathname };
 };
 
 type NewState = ReturnType<typeof createState>;
+
+const version = 2;
+
+const Context = createContext<Omit<NewState, "newBoard"> | null>(null);
 
 export function AppState({ children }: { children: React.ReactNode }) {
   const [r, setR] = useState<NewState["r"] | null>(null);
@@ -45,28 +44,14 @@ export function AppState({ children }: { children: React.ReactNode }) {
     const newState = createState();
     (window as any).r = newState.r; // Only for HMR
 
-    const promises = [];
+    await newState.r.mutate.initUserState({
+      id: newState.userId,
+      ...getNewUserInfo(),
+    });
+    await newState.r.mutate.initClientState(newState.userId);
 
-    if (!(await newState.r.query((tx) => hasUserState(tx, newState.userId)))) {
-      promises.push(
-        newState.r.mutate.initUserState({
-          id: newState.userId,
-          ...getNewUserInfo(),
-        })
-      );
-    }
-
-    if (!(await newState.r.query((tx) => hasBoardState(tx)))) {
-      promises.push(newState.r.mutate.initBoardState(newState.userId));
-    }
-
-    promises.push(newState.r.mutate.initClientState(newState.userId));
-
-    const result = await Promise.allSettled(promises);
-
-    if (result.some((p) => p.status === "rejected")) {
-      console.error("Failed to initialize session");
-    }
+    if (newState.newBoard)
+      await newState.r.mutate.initBoardState(newState.userId);
 
     setR(newState.r);
     setUserId(newState.userId);
