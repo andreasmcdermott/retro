@@ -23,7 +23,18 @@ export function initUserState(tx: WriteTransaction, userState: UserState) {
   return initUser(tx, userState);
 }
 
-export const colors = ["#2de2e6", "#ff4365", "#541388", "#f6019d", "#f9c80e"];
+export const colors = [
+  "#0d0221", // Black
+  "#541388", // Dark Purple
+  "#023788", // Dark Blue
+  "#d40078", // Magenta
+  "#ff4365", // Red
+  "#efefef", // Almost White
+  "#f6019d", // Pink
+  "#2de2e6", // Cyan
+  "#ff6c11", // Orange
+  "#f9c80e", // Yellow
+];
 export const avatars = [
   ["🐶", "Puppy"],
   ["🐱", "Kitty"],
@@ -33,14 +44,23 @@ export const avatars = [
   ["🦊", "Fox"],
   ["🐻", "Bear"],
   ["🐼", "Panda"],
+  ["🐻‍❄️", "Polarbear"],
   ["🐨", "Koala"],
-  ["🐷", "Pig"],
-  ["🐵", "Monkey"],
-  ["🦁", "Lion"],
   ["🐯", "Tiger"],
+  ["🦁", "Lion"],
   ["🐮", "Cow"],
+  ["🐷", "Pig"],
   ["🐸", "Frog"],
+  ["🐵", "Monkey"],
+  ["🐣", "Chick"],
   ["🐥", "Chicken"],
+  ["🐞", "Ladybug"],
+  ["🫎", "Moose"],
+  ["🦭", "Seal"],
+  ["🪼", "Jellyfish"],
+  ["🐲", "Dragon"],
+  ["🌞", "Sun"],
+  ["🌝", "Moon"],
 ];
 
 export function getNewUserInfo(): UserInfo {
