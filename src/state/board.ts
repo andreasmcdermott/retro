@@ -15,6 +15,9 @@ export async function initBoardState(tx: WriteTransaction, userId: string) {
   });
 }
 
+export const hasBoardState = async (tx: ReadTransaction) =>
+  tx.has("boardState");
+
 export async function getBoardInfo(tx: ReadTransaction) {
   return (await tx.get<BoardState>("boardState"))?.boardInfo ?? null;
 }
