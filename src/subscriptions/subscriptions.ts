@@ -2,21 +2,14 @@ import { usePresence, useSubscribe } from "@rocicorp/reflect/react";
 import { getClientState } from "../state/client";
 import { getBoardInfo } from "../state/board";
 import { listRetroItems, listRetroItemsByColumn } from "../state/retro-item";
-import { useReflect } from "../AppState";
+import { useReflect, useUserId } from "../AppState";
 import { UserState, getUserState } from "../state/user";
 
 export function useCurrentUser() {
   const r = useReflect();
-  return useSubscribe(
-    r,
-    async (tx) => {
-      const clientState = await getClientState(tx, tx.clientID);
-      if (!clientState) return null;
-      const userState = await getUserState(tx, clientState.userId);
-      return userState;
-    },
-    null
-  );
+  const userId = useUserId();
+
+  return useSubscribe(r, async (tx) => getUserState(tx, userId), null);
 }
 
 export function useUsers() {

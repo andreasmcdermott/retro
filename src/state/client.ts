@@ -8,7 +8,7 @@ const {
   get: getClientState,
   put: putClientState,
   update: updateClientState,
-} = generate<ClientState>("client-state");
+} = generate<ClientState>("client");
 
 export { getClientState, putClientState, updateClientState };
 
