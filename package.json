@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build && cp ./_redirects ./dist/_redirects",
     "preview": "vite preview",
-    "watch": "concurrently --kill-others 'npx reflect dev --silence-startup-message' 'VITE_REFLECT_URL=http://127.0.0.1:8080/ npm run dev'"
+    "watch": "concurrently --kill-others 'npx reflect dev --silence-startup-message' 'VITE_REFLECT_URL=http://127.0.0.1:8080/ npm run dev'",
+    "publish-server": "npx reflect publish --app retro"
   },
   "devDependencies": {
     "@rocicorp/rails": "^0.7.0",
