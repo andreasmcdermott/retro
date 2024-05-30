@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import styles from "./popover.module.css";
 
 export function Popover({
@@ -9,32 +10,41 @@ export function Popover({
   id: string;
   align?: "left" | "center" | "right";
 }) {
-  return (
-    <div
-      ref={(node) => {
-        if (node) {
-          const anchorId = `${id}-trigger`;
+  const ref = useRef<HTMLDivElement>(null);
 
-          node.setAttribute("popover", "");
-          node.setAttribute("anchor", anchorId);
+  useEffect(() => {
+    const updatePopover = () => {
+      const node = ref.current;
 
-          const anchor = document.getElementById(anchorId);
-          if (anchor) {
-            const rect = anchor.getBoundingClientRect();
-            node.style.top = `${rect.bottom}px`;
-            node.style.left =
-              align === "right"
-                ? `${rect.right}px`
-                : align === "center"
-                ? `${rect.left + rect.width / 2}px`
-                : `${rect.left}px`;
-          }
+      if (node) {
+        const anchorId = `${id}-trigger`;
+
+        node.setAttribute("popover", "");
+        node.setAttribute("anchor", anchorId);
+
+        const anchor = document.getElementById(anchorId);
+        if (anchor) {
+          const rect = anchor.getBoundingClientRect();
+          node.style.top = `${rect.bottom}px`;
+          node.style.left =
+            align === "right"
+              ? `${rect.right}px`
+              : align === "center"
+              ? `${rect.left + rect.width / 2}px`
+              : `${rect.left}px`;
         }
-      }}
-      id={id}
-      className={styles.popover}
-      data-align={align}
-    >
+      }
+    };
+
+    updatePopover();
+
+    window.addEventListener("resize", updatePopover);
+
+    return () => window.removeEventListener("resize", updatePopover);
+  }, [id, align]);
+
+  return (
+    <div ref={ref} id={id} className={styles.popover} data-align={align}>
       {children}
     </div>
   );
