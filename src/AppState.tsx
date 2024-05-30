@@ -31,44 +31,55 @@ const createState = () => {
     mutators,
   });
 
-  return {
-    r,
-    userId,
-    boardId,
-  };
+  return { r, userId, boardId };
 };
 
+type NewState = ReturnType<typeof createState>;
+
 export function AppState({ children }: { children: React.ReactNode }) {
-  const [r, setR] = useState<ReturnType<typeof createState>["r"] | null>(null);
-  const [userId, setUserId] = useState<
-    ReturnType<typeof createState>["userId"] | null
-  >(null);
-  const [boardId, setBoardId] = useState<
-    ReturnType<typeof createState>["boardId"] | null
-  >(null);
+  const [r, setR] = useState<NewState["r"] | null>(null);
+  const [userId, setUserId] = useState<NewState["userId"] | null>(null);
+  const [boardId, setBoardId] = useState<NewState["boardId"] | null>(null);
 
   useAsyncEffect(async () => {
-    const { r, userId, boardId } = createState();
-    (window as any).r = r; // Only for HMR
+    const newState = createState();
+    (window as any).r = newState.r; // Only for HMR
 
-    if (!(await r.query((tx) => hasUserState(tx, userId))))
-      await r.mutate.initUserState({ id: userId, ...getNewUserInfo() });
-    if (!(await r.query((tx) => hasBoardState(tx))))
-      await r.mutate.initBoardState(userId);
-    await r.mutate.initClientState(userId);
+    const promises = [];
 
-    setR(r);
-    setUserId(userId);
-    setBoardId(boardId);
+    if (!(await newState.r.query((tx) => hasUserState(tx, newState.userId)))) {
+      promises.push(
+        newState.r.mutate.initUserState({
+          id: newState.userId,
+          ...getNewUserInfo(),
+        })
+      );
+    }
+
+    if (!(await newState.r.query((tx) => hasBoardState(tx)))) {
+      promises.push(newState.r.mutate.initBoardState(newState.userId));
+    }
+
+    promises.push(newState.r.mutate.initClientState(newState.userId));
+
+    const result = await Promise.allSettled(promises);
+
+    if (result.some((p) => p.status === "rejected")) {
+      console.error("Failed to initialize session");
+    }
+
+    setR(newState.r);
+    setUserId(newState.userId);
+    setBoardId(newState.boardId);
   }, []);
+
+  if (!r || !userId || !boardId) return null;
+
   return (
     <Context.Provider
-      value={useMemo(
-        () => (r && userId && boardId ? { r, userId, boardId } : null),
-        [r, userId, boardId]
-      )}
+      value={useMemo(() => ({ r, userId, boardId }), [r, userId, boardId])}
     >
-      {r && userId && boardId ? <>{children}</> : null}
+      <>{children}</>
     </Context.Provider>
   );
 }
