@@ -1,0 +1,22 @@
+.group {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem 0.25rem 1rem 0.25rem;
+  border: 1px solid var(--dark-purple);
+  box-shadow: 2px 2px 0 var(--dark-purple);
+  background: white;
+}
+
+.group legend {
+  color: white;
+  font-weight: bold;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  background: var(--dark-purple);
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.1rem 0.25rem 0.1rem 0.25rem;
+}

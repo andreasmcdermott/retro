@@ -1,9 +1,11 @@
 .avatar {
-  width: 2rem;
+  all: unset;
+  cursor: default;
+  width: 2.25rem;
   height: 2rem;
   border-radius: 0.2rem 0.75rem 0.2rem 0.75rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--dark-blue);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }

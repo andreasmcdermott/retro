@@ -1,7 +1,7 @@
 import styles from "./textInput.module.css";
 
 export function TextInput({
-  autoFocus,
+  autoFocus = false,
   value = "",
   onChange,
   onBlur,

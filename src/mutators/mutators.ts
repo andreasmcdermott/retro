@@ -1,5 +1,5 @@
 import type { MutatorDefs } from "@rocicorp/reflect";
-import { initClientState } from "../state/client.js";
+import { initClientState, setUserInfo } from "../state/client.js";
 import {
   initBoardState,
   updateBoardName,
@@ -16,6 +16,7 @@ export type M = typeof mutators;
 
 export const mutators = {
   initClientState,
+  setUserInfo,
   initBoardState,
   updateBoardName,
   cycleBoardMode,

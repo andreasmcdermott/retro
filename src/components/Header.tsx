@@ -5,7 +5,9 @@ import styles from "./header.module.css";
 import { TextInput } from "./TextInput";
 import { useReflect, useUserId } from "../AppState";
 import { useEditState } from "../hooks/useEditState";
-import { Edit, Menu, New, PlusOne, User, Viewing } from "../icons";
+import { Edit, New, PlusOne, User, Viewing } from "../icons";
+import { Popover } from "./Popover";
+import { UserMenu } from "./UserMenu";
 
 export function Header() {
   const clients = useClients();
@@ -77,9 +79,16 @@ export function Header() {
         >
           <New /> Create New Board
         </Button>
-        <Button onClick={() => {}}>
+        <Button
+          id="user-menu-trigger"
+          popovertarget="user-menu"
+          popovertargetaction="toggle"
+        >
           <User />
         </Button>
+        <Popover id="user-menu" align="right">
+          <UserMenu />
+        </Popover>
       </div>
     </div>
   );

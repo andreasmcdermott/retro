@@ -28,8 +28,8 @@ export function initClientState(
   return initImpl(tx, { id: tx.clientID, ...clientState });
 }
 
-const colors = ["#2de2e6", "#ff4365", "#541388", "#f6019d", "#f9c80e"];
-const avatars = [
+export const colors = ["#2de2e6", "#ff4365", "#541388", "#f6019d", "#f9c80e"];
+export const avatars = [
   ["🐶", "Puppy"],
   ["🐱", "Kitty"],
   ["🐭", "Mouse"],
@@ -48,12 +48,31 @@ const avatars = [
   ["🐥", "Chicken"],
 ];
 
-export function getUserInfo(): UserInfo {
+export function updateStoredUserInfo(userInfo: UserInfo) {
+  localStorage.setItem("userInfo", JSON.stringify(userInfo));
+}
+
+export function getStoredUserInfo() {
   const rawUserInfo = localStorage.getItem("userInfo");
   if (rawUserInfo) return JSON.parse(rawUserInfo);
 
-  const [avatar, name] = oneOf(avatars);
-  const randUserInfo = { avatar, name, color: oneOf(colors) };
-  localStorage.setItem("userInfo", JSON.stringify(randUserInfo));
+  return null;
+}
+
+export function getUserInfo(): UserInfo {
+  const userInfo = getStoredUserInfo();
+  if (userInfo) return userInfo;
+
+  const [avatar] = oneOf(avatars);
+  const randUserInfo = { avatar, name: "Anonymous", color: oneOf(colors) };
+  updateStoredUserInfo(randUserInfo);
   return randUserInfo;
+}
+
+export async function setUserInfo(tx: WriteTransaction, userInfo: UserInfo) {
+  const current = await getClientState(tx, tx.clientID);
+
+  if (!current) return;
+
+  return updateClientState(tx, { ...current, userInfo });
 }

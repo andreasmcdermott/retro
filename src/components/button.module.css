@@ -1,11 +1,12 @@
 .unstyledButton,
-.iconButton {
+.iconButton,
+.colorButton {
   all: unset;
   cursor: pointer;
   display: flex;
   margin: 0;
-  padding: 0;
-  border-radius: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem 0.5rem 0.25rem 0.5rem;
 }
 
 .button,
@@ -40,8 +41,18 @@
   box-shadow: 0 0 0.5rem var(--pink);
 }
 
+.colorButton {
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  box-shadow: 1px 1px 0 var(--black);
+}
+
 .iconButton:focus-visible,
 .unstyledButton:focus-visible,
-.iconButton:focus-visible {
-  outline: 2px solid var(--yellow);
+.iconButton:focus-visible,
+.colorButton:focus-visible,
+.smallButton:focus-visible,
+.button:focus-visible {
+  outline: 2px solid var(--cyan);
 }

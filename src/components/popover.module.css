@@ -1,0 +1,29 @@
+.popover {
+  border: 0 none transparent;
+  background: var(--yellow);
+  border-radius: 1.25rem 0.5rem 1.25rem 0.5rem;
+  padding: 1rem;
+  margin: 0;
+  inset: unset;
+  position: absolute;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.popover[data-align="right"] {
+  translate: -100% 5px;
+}
+
+.popover[data-align="left"] {
+  translate: 0 5px;
+}
+
+.popover[data-align="center"] {
+  translate: -50% 5px;
+}
+
+.popover:not(:popover-open) {
+  display: none;
+}

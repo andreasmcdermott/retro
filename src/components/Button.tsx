@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { HTMLAttributes, useState } from "react";
 import { AddUser, Check } from "../icons";
 import { copyValueToClipboard } from "../utils/copy";
 import { wait } from "../utils/wait";
@@ -65,13 +65,13 @@ export function CopyButton({
 
 export function Button({
   children,
-  onClick,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
+  ...rest
+}: HTMLAttributes<HTMLButtonElement> & {
+  popovertarget?: string;
+  popovertargetaction?: "toggle" | "show" | "hide";
 }) {
   return (
-    <button type="button" onClick={onClick} className={styles.button}>
+    <button {...rest} type="button" className={styles.button}>
       {children}
     </button>
   );
@@ -88,5 +88,22 @@ export function SmallButton({
     <button type="button" onClick={onClick} className={styles.smallButton}>
       {children}
     </button>
+  );
+}
+
+export function ColorButton({
+  color,
+  onClick,
+}: {
+  color: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={styles.colorButton}
+      style={{ background: color }}
+    />
   );
 }
