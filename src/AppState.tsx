@@ -3,20 +3,15 @@ import { nanoid } from "nanoid";
 import { Reflect } from "@rocicorp/reflect/client";
 import { mutators } from "./mutators";
 import { useAsyncEffect } from "./hooks/useAsyncEffect";
-import { getNewUserInfo, hasUserState } from "./state/user";
+import { getNewUserInfo } from "./state/user";
 
-const createState = () => {
+const createState = (boardId: string) => {
   const server: string | undefined = import.meta.env.VITE_REFLECT_URL;
   if (!server) throw new Error("VITE_REFLECT_URL required");
 
   const existingUserId = localStorage.getItem(`v${version}:userId`);
   const userId = existingUserId || nanoid();
   localStorage.setItem(`v${version}:userId`, userId);
-
-  const pathname = location.pathname.slice(1);
-  const boardId = pathname || nanoid();
-
-  if (!pathname) history.replaceState({}, "", `/${boardId}`);
 
   const r = new Reflect({
     server,
@@ -26,23 +21,32 @@ const createState = () => {
     mutators,
   });
 
-  return { r, userId, boardId, newBoard: !pathname };
+  return { r, userId, boardId };
 };
 
 type NewState = ReturnType<typeof createState>;
 
 const version = 2;
 
-const Context = createContext<Omit<NewState, "newBoard"> | null>(null);
+const Context = createContext<NewState | null>(null);
 
-export function AppState({ children }: { children: React.ReactNode }) {
+export function AppState({
+  boardId: _boardId,
+  children,
+}: {
+  boardId: string | null | undefined;
+  children: React.ReactNode;
+}) {
   const [r, setR] = useState<NewState["r"] | null>(null);
   const [userId, setUserId] = useState<NewState["userId"] | null>(null);
   const [boardId, setBoardId] = useState<NewState["boardId"] | null>(null);
 
   useAsyncEffect(async () => {
-    const newState = createState();
+    const newBoard = !_boardId;
+    const newState = createState(_boardId || nanoid());
     (window as any).r = newState.r; // Only for HMR
+
+    history.replaceState({}, "", `/b/${newState.boardId}`);
 
     await newState.r.mutate.initUserState({
       id: newState.userId,
@@ -50,13 +54,12 @@ export function AppState({ children }: { children: React.ReactNode }) {
     });
     await newState.r.mutate.initClientState(newState.userId);
 
-    if (newState.newBoard)
-      await newState.r.mutate.initBoardState(newState.userId);
+    if (newBoard) await newState.r.mutate.initBoardState(newState.userId);
 
     setR(newState.r);
     setUserId(newState.userId);
     setBoardId(newState.boardId);
-  }, []);
+  }, [_boardId]);
 
   const state = useMemo(
     () => (r && userId && boardId ? { r, userId, boardId } : null),

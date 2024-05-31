@@ -30,7 +30,7 @@ export function TextArea({
         disabled={disabled}
         onKeyDown={(e) => {
           if (e.key === "Escape") onCancel?.();
-          else if (e.key === "Enter" && (e.metaKey || e.ctrlKey))
+          else if (e.key === "Enter" && !e.shiftKey)
             onSave(e.currentTarget.value);
         }}
       />

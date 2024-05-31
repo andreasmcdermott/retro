@@ -49,7 +49,7 @@ export function Main() {
       <Column
         id="improvements"
         title="Improvements"
-        subTitle="What could be improved?"
+        subTitle="What can be improved?"
       />
       <Column id="learnings" title="Learnings" subTitle="What did we learn?" />
       <Column id="questions" title="Questions" subTitle="What is unclear?" />

@@ -8,6 +8,7 @@ import { useEditState } from "../hooks/useEditState";
 import { Edit, New, PlusOne, User, Viewing } from "../icons";
 import { Popover } from "./Popover";
 import { UserMenu } from "./UserMenu";
+import { nanoid } from "nanoid";
 
 export function Header() {
   const users = useUsers();
@@ -74,7 +75,7 @@ export function Header() {
       <div className={styles.otherActions}>
         <Button
           onClick={() => {
-            window.open(location.origin, "_blank");
+            window.open(`${location.origin}/b`, "_blank");
           }}
         >
           <New /> Create New Board
