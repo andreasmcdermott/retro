@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { seconds } from "../utils/time";
 import styles from "./draftItem.module.css";
 
-export function DraftItem({ updatedAt }: { updatedAt: number | undefined }) {
-  if (!updatedAt) updatedAt = Date.now() - seconds(15);
-
+export function DraftItem({
+  updatedAt = 0,
+}: {
+  updatedAt: number | undefined;
+}) {
   const [opacity, setOpacity] = useState(0);
 
   useEffect(() => {
