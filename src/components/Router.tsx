@@ -20,6 +20,15 @@ type RouteState = CurrentRouteState & RouteListeners;
 
 const RouteContext = createContext<RouteState | null>(null);
 
+const canParseUrl = (url: string) => {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 export function Router({ children }: { children: React.ReactNode }) {
   const [{ current, params }, setCurrent] = useState<CurrentRouteState>({
     current: null,
@@ -82,8 +91,8 @@ export function Router({ children }: { children: React.ReactNode }) {
         const href = target.getAttribute("href") || "";
 
         if (
-          !URL.canParse(href) ||
-          new URL(href).origin === window.location.origin
+          href.startsWith("/") ||
+          (canParseUrl(href) && new URL(href).origin === window.location.origin)
         ) {
           e.preventDefault();
           history.pushState({}, "", href);
