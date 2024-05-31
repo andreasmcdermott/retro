@@ -13,7 +13,7 @@ type CurrentRouteState = {
 };
 
 type RouteListeners = {
-  registerRoute: (route: string) => () => void;
+  registerRoute: (route: string | string[]) => () => void;
 };
 
 type RouteState = CurrentRouteState & RouteListeners;
@@ -103,10 +103,14 @@ export function Router({ children }: { children: React.ReactNode }) {
     onRouteChange();
   }, []);
 
-  const registerRoute = useCallback((route: string) => {
-    routesRef.current.add(route);
+  const registerRoute = useCallback((route: string | string[]) => {
+    if (Array.isArray(route)) route.forEach((r) => routesRef.current.add(r));
+    else routesRef.current.add(route);
+
     return () => {
-      routesRef.current.delete(route);
+      if (Array.isArray(route))
+        route.forEach((r) => routesRef.current.delete(r));
+      else routesRef.current.delete(route);
     };
   }, []);
 
@@ -130,21 +134,25 @@ const useCurrentRoute = () => {
 
 export const useParams = () => useRouteContext().params ?? {};
 
-const useRoute = (path: string) => {
+const useRoute = (path: string | string[]) => {
   const { registerRoute, current } = useRouteContext();
 
   useEffect(() => {
     return registerRoute(path);
   }, [path, registerRoute]);
 
-  return current === path;
+  return !current
+    ? false
+    : Array.isArray(path)
+    ? path.includes(current)
+    : current === path;
 };
 
 export function Route({
   path,
   children,
 }: {
-  path: string;
+  path: string | string[];
   children: React.ReactNode;
 }) {
   const isCurrent = useRoute(path);
