@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 
-export const gotoNewBoard = () => {
-  history.pushState({}, "", `/b/${nanoid()}`);
+export const gotoNewBoard = (newPage = false) => {
+  if (newPage) window.open(`${location.origin}/b`, "_blank");
+  else history.pushState({}, "", `/b`);
 };

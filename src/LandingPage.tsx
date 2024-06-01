@@ -12,7 +12,7 @@ export function LandingPage() {
         Simply create a new board and share the link with your team!
       </p>
       <div>
-        <Button onClick={gotoNewBoard}>
+        <Button onClick={() => gotoNewBoard()}>
           <New /> Create a new board
         </Button>
       </div>

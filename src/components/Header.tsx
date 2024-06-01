@@ -9,6 +9,7 @@ import { Edit, New, PlusOne, User, Viewing } from "../icons";
 import { Popover } from "./Popover";
 import { UserMenu } from "./UserMenu";
 import { nanoid } from "nanoid";
+import { gotoNewBoard } from "../utils/navigation";
 
 export function Header() {
   const users = useUsers();
@@ -73,11 +74,7 @@ export function Header() {
         </div>
       </div>
       <div className={styles.otherActions}>
-        <Button
-          onClick={() => {
-            window.open(`${location.origin}/b`, "_blank");
-          }}
-        >
+        <Button onClick={() => gotoNewBoard(true)}>
           <New /> Create New Board
         </Button>
         <Button
