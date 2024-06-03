@@ -9,7 +9,7 @@ import { Check, Cog, Edit, New, PlusOne, User, Viewing } from "../icons";
 import { Popover } from "./Popover";
 import { UserMenu } from "./UserMenu";
 import { nanoid } from "nanoid";
-import { gotoNewBoard } from "../utils/navigation";
+import { gotoNewBoard } from "../utils/board";
 import { Fieldset } from "./Fieldset";
 
 export function Header() {

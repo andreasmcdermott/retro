@@ -4,6 +4,9 @@ import { Reflect } from "@rocicorp/reflect/client";
 import { mutators } from "./mutators";
 import { useAsyncEffect } from "./hooks/useAsyncEffect";
 import { getNewUserInfo } from "./state/user";
+import { gotoBoard, setLastBoardId } from "./utils/board";
+
+const version = 2;
 
 const createState = (boardId: string) => {
   const server: string | undefined = import.meta.env.VITE_REFLECT_URL;
@@ -26,8 +29,6 @@ const createState = (boardId: string) => {
 
 type NewState = ReturnType<typeof createState>;
 
-const version = 2;
-
 const Context = createContext<NewState | null>(null);
 
 export function AppState({
@@ -46,7 +47,8 @@ export function AppState({
     const newState = createState(_boardId || nanoid());
     (window as any).r = newState.r; // Only for HMR
 
-    history.replaceState({}, "", `/b/${newState.boardId}`);
+    gotoBoard(newState.boardId, true);
+    setLastBoardId(newState.boardId);
 
     await newState.r.mutate.initUserState({
       id: newState.userId,
