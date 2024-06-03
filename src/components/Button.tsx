@@ -6,13 +6,10 @@ import styles from "./button.module.css";
 
 export function UnstyledButton({
   children,
-  onClick,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-}) {
+  ...rest
+}: HTMLAttributes<HTMLButtonElement>) {
   return (
-    <button className={styles.unstyledButton} type="button" onClick={onClick}>
+    <button {...rest} className={styles.unstyledButton} type="button">
       {children}
     </button>
   );
@@ -20,18 +17,18 @@ export function UnstyledButton({
 
 export function IconButton({
   children,
-  onClick,
   color = "inherit",
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
+  ...rest
+}: HTMLAttributes<HTMLButtonElement> & {
+  popovertarget?: string;
+  popovertargetaction?: "toggle" | "show" | "hide";
   color?: string;
 }) {
   return (
     <button
-      className={styles.iconButton}
+      {...rest}
       type="button"
-      onClick={onClick}
+      className={styles.iconButton}
       style={{ color }}
     >
       {children}

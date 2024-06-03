@@ -4,7 +4,7 @@ import { initUserState, putUserState, updateUserState } from "../state/user.js";
 import {
   initBoardState,
   updateBoardName,
-  cycleBoardMode,
+  setBoardMode,
 } from "../state/board.js";
 import {
   putRetroItem,
@@ -22,7 +22,7 @@ export const mutators = {
   updateUserState,
   initBoardState,
   updateBoardName,
-  cycleBoardMode,
+  setBoardMode,
   putRetroItem,
   updateRetroValue,
   deleteRetroItem,

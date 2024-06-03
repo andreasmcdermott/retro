@@ -28,19 +28,11 @@ export async function updateBoardName(
     return tx.set("board", { boardInfo: { ...boardInfo, name } });
 }
 
-export async function cycleBoardMode(tx: WriteTransaction, userId: string) {
+export async function setBoardMode(
+  tx: WriteTransaction,
+  { userId, mode }: { mode: "editing" | "viewing" | "voting"; userId: string }
+) {
   const boardInfo = await getBoardInfo(tx);
-  if (boardInfo && boardInfo.owner === userId) {
-    return tx.set("board", {
-      boardInfo: {
-        ...boardInfo,
-        mode:
-          boardInfo.mode === "editing"
-            ? "voting"
-            : boardInfo.mode === "voting"
-            ? "viewing"
-            : "editing",
-      },
-    });
-  }
+  if (boardInfo && boardInfo.owner === userId)
+    return tx.set("board", { boardInfo: { ...boardInfo, mode } });
 }

@@ -6,6 +6,7 @@ import { M } from "../mutators";
 import { TextInput } from "./TextInput";
 import { UserInfo, avatars, colors } from "../state/user";
 import { useCurrentUser } from "../subscriptions";
+import { Fieldset } from "./Fieldset";
 
 const updateUserInfo = (
   r: Reflect<M>,
@@ -23,40 +24,43 @@ export function UserMenu() {
 
   return (
     <>
-      <fieldset className={styles.group}>
-        <legend>Name</legend>
-        <div style={{ gridColumn: "1 / -1" }}>
-          <TextInput
-            value={user.name}
-            onChange={(v) => updateUserInfo(r, user.id, { name: v })}
-          />
+      <Fieldset legend="Name">
+        <div className={styles.group}>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <TextInput
+              value={user.name}
+              onChange={(v) => updateUserInfo(r, user.id, { name: v })}
+            />
+          </div>
         </div>
-      </fieldset>
-      <fieldset className={styles.group}>
-        <legend>Avatar</legend>
-        {avatars.map(([emoji, name]) => (
-          <UnstyledButton
-            key={name}
-            onClick={() => {
-              updateUserInfo(r, user.id, { avatar: emoji });
-            }}
-          >
-            {emoji}
-          </UnstyledButton>
-        ))}
-      </fieldset>
-      <fieldset className={styles.group}>
-        <legend>Color</legend>
-        {colors.map((color) => (
-          <ColorButton
-            key={color}
-            color={color}
-            onClick={() => {
-              updateUserInfo(r, user.id, { color });
-            }}
-          />
-        ))}
-      </fieldset>
+      </Fieldset>
+      <Fieldset legend="Avatar">
+        <div className={styles.group}>
+          {avatars.map(([emoji, name]) => (
+            <UnstyledButton
+              key={name}
+              onClick={() => {
+                updateUserInfo(r, user.id, { avatar: emoji });
+              }}
+            >
+              {emoji}
+            </UnstyledButton>
+          ))}
+        </div>
+      </Fieldset>
+      <Fieldset legend="Color">
+        <div className={styles.group}>
+          {colors.map((color) => (
+            <ColorButton
+              key={color}
+              color={color}
+              onClick={() => {
+                updateUserInfo(r, user.id, { color });
+              }}
+            />
+          ))}
+        </div>
+      </Fieldset>
     </>
   );
 }

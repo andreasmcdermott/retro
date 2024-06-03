@@ -5,11 +5,12 @@ import styles from "./header.module.css";
 import { TextInput } from "./TextInput";
 import { useReflect, useUserId } from "../AppState";
 import { useEditState } from "../hooks/useEditState";
-import { Edit, New, PlusOne, User, Viewing } from "../icons";
+import { Check, Cog, Edit, New, PlusOne, User, Viewing } from "../icons";
 import { Popover } from "./Popover";
 import { UserMenu } from "./UserMenu";
 import { nanoid } from "nanoid";
 import { gotoNewBoard } from "../utils/navigation";
+import { Fieldset } from "./Fieldset";
 
 export function Header() {
   const users = useUsers();
@@ -51,20 +52,62 @@ export function Header() {
           </h1>
         )}
         {isOwner && (
-          <IconButton
-            onClick={() => {
-              r.mutate.cycleBoardMode(userId);
-            }}
-            color="var(--yellow)"
-          >
-            {boardInfo.mode === "viewing" ? (
-              <Viewing />
-            ) : boardInfo.mode === "voting" ? (
-              <PlusOne />
-            ) : (
-              <Edit />
-            )}
-          </IconButton>
+          <>
+            <IconButton
+              id="mode-menu-trigger"
+              popovertarget="mode-menu"
+              popovertargetaction="toggle"
+              color="var(--yellow)"
+            >
+              <Cog />
+            </IconButton>
+            <Popover id="mode-menu" align="left">
+              <Fieldset legend="Mode">
+                <div className={styles.boardSettingsMenu}>
+                  <UnstyledButton
+                    onClick={() => {
+                      r.mutate.setBoardMode({ userId, mode: "editing" });
+                    }}
+                    aria-selected={boardInfo.mode === "editing"}
+                  >
+                    <span>
+                      <Check />
+                    </span>
+                    <strong>Write</strong>
+                    <small>
+                      Submit anything you want to discuss or give kudos to.
+                    </small>
+                  </UnstyledButton>
+                  <UnstyledButton
+                    onClick={() => {
+                      r.mutate.setBoardMode({ userId, mode: "voting" });
+                    }}
+                    aria-selected={boardInfo.mode === "voting"}
+                  >
+                    <span>
+                      <Check />
+                    </span>
+                    <strong>Vote</strong>
+                    <small>
+                      Vote on the topics you find most important to discuss.
+                    </small>
+                  </UnstyledButton>
+                  <UnstyledButton
+                    onClick={() => {
+                      r.mutate.setBoardMode({ userId, mode: "viewing" });
+                    }}
+                    aria-selected={boardInfo.mode === "viewing"}
+                  >
+                    <span>
+                      <Check />
+                    </span>
+                    <strong>Discuss</strong>
+                    <small>View all submitted topics ordered by upvotes.</small>
+                  </UnstyledButton>
+                </div>
+              </Fieldset>
+            </Popover>
+          </>
         )}
         <CopyButton value={location.href} color="var(--yellow)" />
         <div className={styles.users}>

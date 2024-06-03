@@ -38,3 +38,51 @@
   align-items: center;
   gap: 1rem;
 }
+
+.boardSettingsMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.boardSettingsMenu > button {
+  display: grid;
+  grid-template-columns: 16px auto;
+  grid-template-rows: max-content max-content;
+  align-items: center;
+  column-gap: 1rem;
+  padding: 0.5rem;
+}
+
+.boardSettingsMenu > button[aria-selected="false"]:hover {
+  background: var(--dark-purple);
+  color: white;
+}
+
+.boardSettingsMenu > button[aria-selected="true"]:hover {
+  cursor: default;
+  background: white;
+  color: var(--black);
+}
+
+.boardSettingsMenu > button > span {
+  grid-row-start: 1;
+  grid-row-end: -1;
+}
+
+.boardSettingsMenu > button[aria-selected="false"] > span {
+  visibility: hidden;
+}
+
+.boardSettingsMenu > button > strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  letter-spacing: 1px;
+}
+
+.boardSettingsMenu > button > small {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
